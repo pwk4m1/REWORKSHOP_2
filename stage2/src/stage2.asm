@@ -171,7 +171,7 @@ _start:
 	cli
 	hlt
 
-key db "1234"
+key db "12"
 
 ; esi= ptr to current 1024 byte buffer
 ; edi = encrypted data, 1024 bytes
