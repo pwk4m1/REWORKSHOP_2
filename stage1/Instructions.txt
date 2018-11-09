@@ -1,0 +1,55 @@
+
+Stage1, how-to complete:
+
+commands to execute in shell are prefixed with '$' character.
+commands to execute in gnu-debugger (gdb) are prefixed with 'gdb$' string.
+commands to execute in radare2 decompiler (r2) are prefixed with 'r2>' string.
+
+comments about commands are prefixed with '#' character
+
+
+First, open the stage1 binary in a decompiler, and let the decompiler
+to analyze the binary. After that read the relevant parts of binary code
+to get basic idea about how does the code work.
+
+$ r2 -b 64 bin/stage1	# open the binary in r2
+
+r2> aaaaa		# analyze all of it
+r2> Vv			# switch to visual mode
+
+Navigate to functions that interest you by using up/down arrow keys,
+the function you're currently viewing is indicated by a '*' character.
+
+The most interesting ones are probably (sym.)main, and (sym.)gen_pwd_byte.
+press 'g' character to  go to function,  and then 'V' to show function
+code.
+
+By following the code, you can see that main function first allocates
+memory for itself, then generates the correct pass string to allocated memory.
+after the correct pass key string has been generated, the main
+function calls strcmp() function, which is used for comparing strings.
+
+arguments for strcmp are stored to registers rdi and rsi
+	
+Next, open up the binary file in a debugger, break the codeflow at line
+before call to strcmp, and see what's inside rdi & rsi.
+
+$ gdb bin/stage1
+
+gdb$ break	*main+N  	# N equals the line number that code
+				# continues after beginning of main()
+				# until the call to strcmp()
+
+gdb$ run 1234	# run the code with argument '1234' as your pass key
+
+After hitting the breakpoint, you can inspect rdi/rsi values and find
+the correct pass key
+
+gdb$ i r rsi
+gdb$ i r rdi
+
+
+
+
+
+
